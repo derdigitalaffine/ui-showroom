@@ -1,6 +1,6 @@
 # Akzeptanztests — UI Showroom
 
-Die Szenarien definieren den überprüfbaren Nachweis für die Gates der [Roadmap](ROADMAP.md). **Status:** geplant. Ohne implementierten Anwendungscode sind die Anwendungstests noch **nicht durchgeführt**.
+Die Szenarien definieren den überprüfbaren Nachweis für die Gates der [Roadmap](ROADMAP.md). **Status:** Anwendung und erste automatisierte Prüfungen sind implementiert; Browser-, Screenreader- und Release-Abnahmen stehen noch aus.
 
 ## A. Governance (Gate G0)
 
@@ -127,19 +127,47 @@ Für einen repräsentativen PR prüfen:
 
 | Prüfung | Aktueller Stand |
 | --- | --- |
-| Dokumentationsstruktur und lokale Links | durch initialen Docs-Workflow bei PR überprüfbar |
-| React Build / Typecheck / Unit | offen bis M1 |
-| Contract-/Adapter-Parität | offen bis M2–M4 |
-| Browser / Responsivität / A11y | offen bis M3–M6 |
-| Release-Dry-Run | offen bis M6 |
+| Dokumentationsstruktur und lokale Links | Docs-Workflow vorhanden; lokal mit `python scripts/check_docs.py` geprüft |
+| React Build / Typecheck / Unit | App-Workflow vorhanden; Ergebnis pro PR/Commit prüfen |
+| Contract-/Adapter-Parität | Katalog- und Capability-Tests vorhanden; Browser-Interaktionstests offen |
+| Browser / Responsivität / A11y | offen; kein automatisierter Browser-/Axe-Job und kein dokumentierter manueller Smoke |
+| Release-Dry-Run | offen; Docker-Start in beiden Modi und manueller Freigabelauf nachweisen |
 
 Es dürfen **keine** nicht ausgeführten Tests in einem PR als „grün“ beschrieben werden.
 
-## K. Temporäre Docker-Platzhalterseite (vor dem React-MVP)
+## K. Konkrete Freigabematrix für die Implementierung
 
-- `docker compose config -q` validiert die Stack-Konfiguration.
-- `docker compose up -d` startet ohne Build, Datenbank oder Secrets.
-- `GET /` liefert HTTP 200 und den Titel `UI Showroom`.
-- `GET /styles.css` liefert Styles; `GET /health` antwortet mit `ok`.
-- Ein CI-Smoke prüft Start, HTTP-Antworten und Stoppen des Containers.
-- Container ist nur ein Platzhalter: keine Adapter-/React-/A11y-MVP-Abnahme daraus ableiten.
+Diese Matrix wird pro Release mit Datum, Commit-SHA, ausführender Person, Ergebnis und Link zum CI-Lauf oder einem kurzen manuellen Prüfprotokoll ausgefüllt. Ein leerer Nachweis bedeutet **offen**. Automatische Checks ersetzen die manuellen Tastatur- und Screenreader-Smokes nicht.
+
+| Gate | Prüffall | Mindestnachweis | Blockiert bei |
+| --- | --- | --- | --- |
+| G1 | Clean Install, Typecheck, Lint, Unit, Build | CI-Lauf auf dem PR-Commit, Lockfile-Installation ohne Änderungen | Fehler oder nicht reproduzierbarer Build |
+| G2 | Kanonische Daten und Varianten | Contract-Tests für alle vier Pflichtbeispiele und ihre sinnvollen Zustände | Abweichende Inhalte oder fehlende Zustandsdefinition |
+| G3–G4 | Adapter-Parität | Parametrisierte Interaktionstests über beide Adapter; Capability-Matrix mit begründeten Abweichungen | Fehlende Pflichtfunktion oder irreführendes „supported“ |
+| G5 | URL, Suche, Auswahl, Back/Forward | Browser-Test mit direktem Aufruf und Navigation | verlorener Zustand oder kaputte Fallback-Ansicht |
+| G5–G6 | Responsive | Browserprüfung bei 320, 360, 768, 1280 px; Screenshot und Prüfung auf horizontales Überlaufen | unbedienbares Control oder verdeckte Inhalte |
+| G6 | Accessibility | Automatischer Axe-Check plus dokumentierter Tastatur- und Screenreader-Smoke | kritischer Verstoß bei Fokus, Label, Dialog oder Kontrast |
+| G6 | Sicherheit/Abhängigkeiten | Dependency-/Lizenzprüfung und Sichtprüfung auf Secrets, HTML-Injektion, unsichere externe Links | unbewerteter kritischer Fund |
+| G6 | Docker-Auslieferung | Neu gebauter Stack per HTTP; optionaler Caddy-Stack; Healthcheck und Rückfallweg | Startfehler, fehlerhafte Proxy-Weiterleitung oder fehlende SPA-Fallbacks |
+
+### Manuelle Prüfschritte
+
+1. Je Adapter Button, Textfeld mit leerer/ungültiger Eingabe, Select und Dialog aus der Tastatur bedienen. Dialog per Escape schließen; Fokuskehr zum Auslöser prüfen.
+2. Sichtbaren Fokus, verständliche Fehlermeldung und semantische Beziehung zwischen Label, Control und Fehler mit Browser-Accessibility-Tree oder Screenreader prüfen.
+3. Variante und beide Bibliotheken wechseln; identischen Text, dieselben Optionen und dieselbe fachliche Aktion abgleichen. Bekannte Bibliotheksgrenzen in der Oberfläche mit der Capability-Matrix abgleichen.
+4. Je Referenzbreite Suche, Navigation und Vergleich bedienen. Kein unbeabsichtigtes horizontales Scrollen; bei 320/360 px sind beide Vergleichskarten nacheinander erreichbar.
+5. Einen Deep Link in einem neuen Tab öffnen, danach Browser Back/Forward benutzen; ungültige Komponenten-, Bibliotheks- und Varianten-IDs prüfen.
+6. Mit reduzierter Bewegung testen. Mindestens ein Screenreader-Smoke umfasst Navigation, Eingabefehler und Dialogöffnung/-schließung.
+7. Frischen Docker-Build und Start ohne Proxy sowie mit optionalem Caddy ausführen; Startseite und Deep Link direkt per HTTP abrufen. Container-Neustart und Stop/Start über das Deploy-Skript prüfen.
+
+### Teststatus und Dokumentationspflicht
+
+Dokumentations- und App-Workflow sind vorhanden. Browser-/Axe-Jobs und die manuellen Abnahmen fehlen weiterhin. Die Release-Freigabe nennt die tatsächlichen Ergebnisse je Commit und offene Prüfpunkte. Ein automatischer Axe-Lauf ist eine Teilprüfung und keine WCAG-Zertifizierung.
+
+### Nachweis auf dem Feature-Branch (2026-11-05)
+
+- `npm ci`, `npm run lint`, `npm run typecheck`, `npm test` (10 Tests) und `npm run build`: bestanden. Der Build meldet ein großes JavaScript-Bundle (624,51 kB minifiziert); Folge-Issue #16.
+- `python3 scripts/check_docs.py`, `git diff --check`, `npm audit --omit=dev --audit-level=high`: bestanden; produktive Dependencies ohne Audit-Funde. Zehn moderate Funde im vollständigen Audit betreffen ausschließlich Entwicklungswerkzeuge.
+- Browser-Smoke im lokalen Vite-Server: Showroom sichtbar; MUI- und Mantine-Dialog geöffnet, mit Escape geschlossen und Fokus zum Auslöser zurückgegeben; ungültiger Deep Link zeigt verständlichen Status. Bei 320, 360, 768 und 1280 px wurde kein horizontales Überlaufen beobachtet; bei 320/360 px sind Vergleichskarten gestapelt.
+- Docker Compose: direkter HTTP-Zugang und optionaler lokaler Caddy-Proxy lieferten Startseite und Deep Link mit HTTP 200; Healthcheck gesund. Öffentliches HTTPS wurde ohne eigene Domain nicht geprüft.
+- **Offen für G6:** Browser-/Axe-CI, dokumentierter Screenreader-Smoke und PR-Review. Diese Punkte stehen in Issue #15; eine Release-Freigabe wird hier noch nicht behauptet.
