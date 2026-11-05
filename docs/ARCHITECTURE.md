@@ -2,7 +2,7 @@
 
 ## Status
 
-**Zielarchitektur, noch kein implementierter Code.** Technische Festlegungen werden durch M0-ADR best채tigt.
+**Zielarchitektur, noch kein React-Anwendungscode.** Technische Festlegungen werden durch M0-ADR best채tigt. Bis dahin l채uft optional eine **statische Nginx-Platzhalterseite** 체ber `compose.yaml` und `placeholder/`. Diese ist bewusst kein React-Stack.
 
 ## Vorschlag
 
@@ -63,7 +63,7 @@ Adapter rendern die zentral beschriebenen Beispiele, ohne sie semantisch zu ver�
 - M5: Browser-Smoke, URL-/Responsive-Verhalten.
 - M6: A11y-Audit, License/Dependency Check, Release-Dry-Run.
 
-Die CI pr체ft **anfangs nur die Dokumentenbasis**. Die produktiven Build-/Browser-Jobs werden nach dem jeweiligen Meilenstein erg채nzt; bis dahin ist nichts als bestanden anzusehen.
+Die CI pr체ft aktuell die Dokumentenbasis **und den separaten Docker-Platzhalter-Smoke-Test**. Produktive React-Build-/Browser-Jobs werden erst nach dem jeweiligen Meilenstein erg채nzt; bis dahin ist nichts als bestanden anzusehen.
 
 ## Architekturentscheidungen
 
