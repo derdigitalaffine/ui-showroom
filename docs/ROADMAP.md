@@ -4,7 +4,7 @@
 
 Die Phasenlogik (P0/P1/P2, eine verantwortliche Agentenrolle pro Paket, explizite Definition of Done, sequenzielle Kernabhängigkeiten und QA-Gates) ist adaptiert aus [`kostuemwettbewerb/docs/ROADMAP.md`](https://github.com/derdigitalaffine/kostuemwettbewerb/blob/main/docs/ROADMAP.md). **Inhalt und Tech-Stack gehören ausschließlich zu UI Showroom.**
 
-**Status am 2026-11-05:** Repository initial leer; Governance und Planung werden als Bootstrap-PR vorbereitet. Der Anwendungscode und die unten genannten QA-Gates sind **noch nicht umgesetzt**. Die Abschnitte sind eine umsetzbare Planung, keine Fortschrittsbehauptung.
+**Status am 2026-11-05:** Anwendung, zwei Adapter, Vergleich, CI und Docker-Deployment sind auf dem Feature-Branch implementiert. Automatische Tests, Build und lokale HTTP-/Caddy-Smokes wurden ausgeführt. Die Release-Freigabe G6 bleibt bis Browser-/Axe-CI, Screenreader-Smoke und PR-Review offen; die folgenden Meilensteine dokumentieren den geplanten Abnahmeweg.
 
 ## Prioritäten
 

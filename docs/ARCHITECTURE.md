@@ -1,12 +1,12 @@
-# Architektur — UI Showroom (Zielbild)
+# Architektur — UI Showroom
 
 ## Status
 
-**Zielarchitektur, noch kein React-Anwendungscode.** Technische Festlegungen werden durch M0-ADR bestätigt. Bis dahin läuft optional eine **statische Nginx-Platzhalterseite** über `compose.yaml` und `placeholder/`. Diese ist bewusst kein React-Stack.
+**Implementierter Stand:** React, TypeScript, Vite, zentraler Katalog, MUI- und Mantine-Adapter, Vergleichsoberfläche und statischer Container-Build. Verbindliche Versionen stehen in ADR-001 bis ADR-003.
 
-## Vorschlag
+## Umsetzung
 
-Eine statisch auslieferbare **React + TypeScript**-Anwendung mit einem modernen Frontend-Build (Vite als Ausgangsvorschlag), ohne notwendiges Backend. Bibliotheksübergreifende Contracts und Demo-Daten sind zentral; UI-Frameworks werden in isolierten Adaptern angebunden.
+Eine statisch auslieferbare **React + TypeScript**-Anwendung mit einem modernen Frontend-Build (Vite), ohne notwendiges Backend. Bibliotheksübergreifende Contracts und Demo-Daten sind zentral; UI-Frameworks werden in isolierten Adaptern angebunden.
 
 ## Verantwortungsgrenzen
 
@@ -63,7 +63,7 @@ Adapter rendern die zentral beschriebenen Beispiele, ohne sie semantisch zu ver�
 - M5: Browser-Smoke, URL-/Responsive-Verhalten.
 - M6: A11y-Audit, License/Dependency Check, Release-Dry-Run.
 
-Die CI prüft aktuell die Dokumentenbasis **und den separaten Docker-Platzhalter-Smoke-Test**. Produktive React-Build-/Browser-Jobs werden erst nach dem jeweiligen Meilenstein ergänzt; bis dahin ist nichts als bestanden anzusehen.
+Die CI prüft **anfangs nur die Dokumentenbasis**. Die produktiven Build-/Browser-Jobs werden nach dem jeweiligen Meilenstein ergänzt; bis dahin ist nichts als bestanden anzusehen.
 
 ## Architekturentscheidungen
 
