@@ -134,3 +134,12 @@ Für einen repräsentativen PR prüfen:
 | Release-Dry-Run | offen bis M6 |
 
 Es dürfen **keine** nicht ausgeführten Tests in einem PR als „grün“ beschrieben werden.
+
+## K. Temporäre Docker-Platzhalterseite (vor dem React-MVP)
+
+- `docker compose config -q` validiert die Stack-Konfiguration.
+- `docker compose up -d` startet ohne Build, Datenbank oder Secrets.
+- `GET /` liefert HTTP 200 und den Titel `UI Showroom`.
+- `GET /styles.css` liefert Styles; `GET /health` antwortet mit `ok`.
+- Ein CI-Smoke prüft Start, HTTP-Antworten und Stoppen des Containers.
+- Container ist nur ein Platzhalter: keine Adapter-/React-/A11y-MVP-Abnahme daraus ableiten.
