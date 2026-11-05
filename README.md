@@ -2,7 +2,33 @@
 
 Ein geplanter React-Showroom zum nachvollziehbaren Vergleichen unterschiedlicher UI-Frameworks und Komponentenbibliotheken.
 
-> **Status:** Repository-Basis und Arbeitsorganisation. Ein lauffähiger Showroom ist noch nicht implementiert.
+> **Status:** Die temporäre Docker-Platzhalterseite läuft eigenständig. Der eigentliche React-Showroom ist noch in Planung.
+
+## Platzhalterseite sofort starten (Docker Compose)
+
+Voraussetzung: Docker Engine und Docker Compose v2.
+
+```bash
+docker compose up -d
+```
+
+Danach erreichbar unter **http://localhost:8080**. Der Healthcheck antwortet unter **http://localhost:8080/health** mit `ok`.
+
+```bash
+docker compose ps             # Status/Health
+docker compose logs -f        # Logs
+docker compose down           # Beenden
+```
+
+Optional Port und Bind-Adresse festlegen, z. B. für einen vorhandenen HTTPS-Reverse-Proxy:
+
+```bash
+BIND_ADDRESS=127.0.0.1 APP_PORT=8081 docker compose up -d
+```
+
+Standardmäßig bindet Compose an `0.0.0.0:8080` (auf dem Host öffentlich erreichbar, sofern die Firewall es erlaubt). **Für öffentliche Domains TLS über einen Reverse Proxy konfigurieren.** Die nginx-Dateien liegen in `ops/nginx.conf`, die reine HTML/CSS-Seite in `placeholder/`. Es werden kein Node/npm, keine Datenbank und keine Secrets benötigt. Den späteren React-Build kann man statt des Platzhalterverzeichnisses ausliefern; die eigentliche App wird durch den Platzhalter nicht vorweggenommen.
+
+
 
 ## Ziel
 
