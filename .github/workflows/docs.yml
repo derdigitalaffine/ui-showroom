@@ -1,0 +1,26 @@
+name: Governance docs
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate project docs and local links
+        run: python scripts/check_docs.py
+
+# Application build, unit, adapter, browser and a11y jobs are M1–M6 deliverables.
+# This initial workflow does not claim to validate application code.
