@@ -28,3 +28,11 @@
 ## Entscheider und Workflow
 
 Orchestrator / Tech Lead zeichnet die ADRs nach Review durch betroffene Rollen ab. Jeder bestätigte Entscheid dokumentiert **Datum, Status, Alternativen, Folgen und betroffene Dateien**. Änderungen erfolgen per PR, nicht im stillen Alleingang.
+
+## ADR-004 — Temporäre Docker-Platzhalterseite (angenommen, 2026-11-05)
+
+- **Entscheidung:** Bis der React-Showroom fertig ist, liefert ein einzelner `nginx:stable-alpine`-Container statisches HTML/CSS über Docker Compose aus.
+- **Ziel:** Sofort erreichbare, ansprechende Projekt-Landingpage mit separatem Healthcheck, ohne Build-Toolchain, Backend, Speicherung oder Laufzeit-Secrets.
+- **Standard:** `0.0.0.0:8080`; `APP_PORT` und `BIND_ADDRESS` konfigurierbar. Öffentliche TLS-Terminierung übernimmt bei Bedarf ein externer Reverse Proxy.
+- **Alternativen:** Vite-Dev-Server (für einen Placeholder unnötig), eigene React-App (zu frühe M1-Festlegung).
+- **Folgen:** Compose-Stack ist ein zeitlich begrenzter Auslieferungspfad. Die Tech-Stack-/Library-Entscheide aus ADR-001/002 bleiben offen. CI-Smoke prüft Compose/HTTP/Health.
